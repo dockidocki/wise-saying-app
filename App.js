@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView, ImageBackground} from 'react-native';
 import WiseSaying from './WiseSaying';
 import file from './assets/wise-sayings.json';
+import { AppLoading } from "expo";
 
 export default function App() {
   const [wiseSaying, setWiseSaying] = useState('');
@@ -48,12 +49,14 @@ export default function App() {
   <> 
     {
       isLoading ? 
-        <View style={styles.container}>
+      <ImageBackground style={styles.container}
+            source={require('./assets/background.jpg')}>
         <WiseSaying key={1} text={wiseSaying} reload ={loadWiseSayings} />
         {/* author={author} /> */}
-        </View> :
-        <View style={styles.container}>
-        </View>
+        <ScrollView contentContainerStyle={styles.toDos}>
+          </ScrollView>
+          </ImageBackground> :
+        <AppLoading />
     }
   </>
   )
@@ -65,5 +68,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  toDos:{
+    alignItems:"center"
   }
 });

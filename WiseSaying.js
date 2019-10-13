@@ -10,26 +10,23 @@ export default function WiseSaying({text, reload}) {
     // }, [text]);
 
     return (
-    <ImageBackground style={styles.container}
-            source={require('./assets/background.jpg')}>
+        <>
         <StatusBar barStyle="light-content" />
-        {/* <View style={styles.halfContainer}>
-            <TextInput style={styles.text}
-                placeholder={"Please Input To Do"} 
-                placeholderTextColor={"white"}
-            ></TextInput>
-        </View> */}
         <View style={{...styles.halfContainer}}>
             <Text style={styles.wise_text}>{text}</Text>
             {/* <Text style={styles.author_text}>{author}</Text> */}
+            <TextInput style={styles.input_text}
+                placeholder={"Please Input To Do"} 
+                placeholderTextColor={"black"}
+            ></TextInput>
         </View>
         {/* <View style={{...styles.rightContainer}}>
             <Text style={styles.author_text}>{author}</Text>
         </View> */}
-        <TouchableOpacity onPress={reload}>
+        {/* <TouchableOpacity onPress={reload}>
             <MaterialCommunityIcons size={36} name={"reload"} color="white" />
-        </TouchableOpacity>
-    </ImageBackground>
+        </TouchableOpacity> */}
+        </>
     )
 }
 
@@ -46,6 +43,7 @@ const styles = StyleSheet.create({
         width:'100%'
     },
     halfContainer:{
+        marginTop:100,
         flex:1,
         justifyContent:"center"
     },
@@ -57,6 +55,13 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent:"flex-end",
         alignItems:"flex-end"
+    },
+    input_text:{
+        fontWeight:"600",
+        color:"#3B0B0B",
+        fontSize: 18,
+        textAlign:'center',
+        margin:50
     },
     wise_text:{
         fontWeight:"600",
