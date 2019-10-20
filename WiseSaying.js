@@ -15,17 +15,17 @@ export default function WiseSaying({text, reload}) {
         <View style={{...styles.halfContainer}}>
             <Text style={styles.wise_text}>{text}</Text>
             {/* <Text style={styles.author_text}>{author}</Text> */}
-            <TextInput style={styles.input_text}
+            {/* <TextInput style={styles.input_text}
                 placeholder={"Please Input To Do"} 
                 placeholderTextColor={"black"}
-            ></TextInput>
+            ></TextInput> */}
         </View>
         {/* <View style={{...styles.rightContainer}}>
             <Text style={styles.author_text}>{author}</Text>
         </View> */}
-        {/* <TouchableOpacity onPress={reload}>
+        <TouchableOpacity onPress={reload}>
             <MaterialCommunityIcons size={36} name={"reload"} color="white" />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         </>
     )
 }
