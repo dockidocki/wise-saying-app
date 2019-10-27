@@ -55,7 +55,7 @@ export default class ToDo extends Component {
                     <View style={styles.actions}>
                         <TouchableOpacity onPressOut={this._finishEditing}>
                             <View style={styles.actionContainer}>
-                                <Text style={styles.actionText}>✅</Text>
+                                <Text style={styles.actionText}>Check</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -63,7 +63,7 @@ export default class ToDo extends Component {
                     <View style={styles.actions}>
                         <TouchableOpacity onPressOut={this._startEditing}>
                             <View style={styles.actionContainer}>
-                                <Text style={styles.actionText}>✏️</Text>
+                                <Text style={styles.actionText}>Edit</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPressOut={(event) => {
@@ -71,7 +71,7 @@ export default class ToDo extends Component {
                             deleteToDo(id)
                         }}>
                             <View style={styles.actionContainer}>
-                                <Text style={styles.actionText}>❌</Text>
+                                <Text style={styles.actionText}>Del</Text>
                             </View>
                         </TouchableOpacity>
                     </View>

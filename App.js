@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, AsyncStorage, TextInput, ScrollView, ImageBackground} from 'react-native';
+import { StyleSheet, View, AsyncStorage, 
+  Text, TextInput, ScrollView, ImageBackground, KeyboardAvoidingView} from 'react-native';
 import WiseSaying from './WiseSaying';
 import ToDo from "./ToDo"; 
 import file from './assets/wise-sayings.json';
 import { AppLoading } from "expo";
 import uuidv1 from "uuid/v1";
+import * as Font from 'expo-font';
+
 import {
   AdMobBanner,
   AdMobInterstitial,
@@ -18,10 +21,48 @@ export default function App() {
   const [newToDo, setNewToDo] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [toDos, setToDos] = useState({});
+  const [mainText, setMainText] = useState('오늘 당신의 가장 중요한\n"One thing"은\n무엇입니까?');
+  const [fontLoaded, setFontLoaded] = useState(false);
 
   useEffect(() => {
+    loadToDos();
+    loadFont();
     loadWiseSayings();
   }, []);
+
+  const loadToDos = async () => {
+    try{
+      const toDos = await AsyncStorage.getItem("toDos");
+      const parsedToDos = JSON.parse(toDos);
+
+      if(parsedToDos && parsedToDos.createdAt){
+        if(parsedToDos.createdAt !== require('moment')().format('YYYY-MM-DD')){
+          parsedToDos = {};
+        }
+      }
+      setToDos(parsedToDos || {});
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const loadFont = async () => {
+    await Font.loadAsync({
+      'font1': require('./assets/fonts/BMHANNAPro.ttf'),
+    });
+    setFontLoaded(true);
+  };
+
+  const loadWiseSayings = () => {
+    if(file){
+      setWiseSaying(file[Math.floor(Math.random() * file.length)].name);
+      // setAuthor(file[Math.floor(Math.random() * file.length)].author)
+      setIsLoading(true);
+    }
+    else{
+
+    }
+  };
 
   const controlNewToDo = (text) => {
     setNewToDo(text);
@@ -31,12 +72,13 @@ export default function App() {
     if(newToDo !== ""){
 
       const ID = uuidv1();
+      const toDay = require('moment')().format('YYYY-MM-DD');
       let tempToDos = toDos;
       tempToDos[ID] = {
         id: ID,
         isCompleted: false,
         text: newToDo,
-        createdAt: Date.now()
+        createdAt: toDay
       };
       setToDos(tempToDos);
       setNewToDo("");
@@ -46,37 +88,6 @@ export default function App() {
 
   const saveToDos = (newToDos) => {
     const saveToDos = AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
-  };
-
-  const loadWiseSayings = () => {
-
-    if(file){
-      setWiseSaying(file[Math.floor(Math.random() * file.length)].name);
-      // setAuthor(file[Math.floor(Math.random() * file.length)].author)
-      setIsLoading(true);
-    }
-    else{
-
-    }
-    // csv()
-    //   .fromFile(csvFilePath)
-    //   .on('json',(jsonObj)=>{
-    //       // combine csv header row and csv line to a json object
-    //       // jsonObj.a ==> 1 or 4
-    //       console.log(jsonObj);
-    //   })
-    //   .on('done',(error)=>{
-    //       console.log('end');
-    //   })
-
-    // const csvFilePath=RNFS.DocumentDirectoryPath + '/assets/wist-sayings.csv';
-
-    // console.log('start');
-    // RNFS.readFile(csvFilePath).then(res => {
-    //   console.log(res);
-    // }).catch(err => {
-    //   console.log(err.message, err.code);
-    // });
   };
 
   const deleteToDo = (id) => {
@@ -123,30 +134,33 @@ export default function App() {
       isLoading ? 
       <ImageBackground style={styles.container}
             source={require('./assets/background.jpg')}>
+        <KeyboardAvoidingView behavior="position">
         <View style={{...styles.halfContainer}}>
           <WiseSaying key={1} text={wiseSaying} reload ={loadWiseSayings} />
         </View>
         {/* author={author} /> */}
-        <TextInput 
+        {fontLoaded ? <Text style={styles.text}>{mainText}</Text> : null}
+        {Object.keys(toDos).length === 0 ? <TextInput 
           style={styles.input} 
-          placeholder={"New To Do"} 
-          value={newToDo} 
+          // placeholder={mainText} 
+          value={newToDo}
           onChangeText={controlNewToDo} 
           placeholderTextColor={"#999"}
           returnKeyType={"done"}
           autoCorrect={false}
           onSubmitEditing={addToDo}
           underlineColorAndroid={"transparent"}
-          />
-        <ScrollView contentContainerStyle={styles.toDos}>
-        {Object.values(toDos).reverse().map(toDo => 
-            <ToDo key={toDo.id} {...toDo} 
-            updateToDo={updateToDo}
-            deleteToDo={deleteToDo} 
-            completeToDo={completeToDo}
-            uncompleteToDo={uncompleteToDo}
-            />)}
-        </ScrollView>
+          /> : <></>}
+          <ScrollView contentContainerStyle={styles.toDos}>
+          {Object.values(toDos).reverse().map(toDo => 
+              <ToDo key={toDo.id} {...toDo} 
+              updateToDo={updateToDo}
+              deleteToDo={deleteToDo} 
+              completeToDo={completeToDo}
+              uncompleteToDo={uncompleteToDo}
+              />)}
+          </ScrollView>
+          </KeyboardAvoidingView>          
         <AdMobBanner
             style={styles.bottomBanner}
             bannerSize="fullBanner"
@@ -186,4 +200,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0
   },
+  text:{
+    fontFamily:'font1',
+    fontSize: 20,
+    textAlign:'center',
+    margin:50
+  }
 });

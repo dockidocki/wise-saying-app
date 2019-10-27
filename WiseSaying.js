@@ -23,9 +23,9 @@ export default function WiseSaying({text, reload}) {
         {/* <View style={{...styles.rightContainer}}>
             <Text style={styles.author_text}>{author}</Text>
         </View> */}
-        <TouchableOpacity onPress={reload}>
+        {/* <TouchableOpacity onPress={reload}>
             <MaterialCommunityIcons size={36} name={"reload"} color="white" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         </>
     )
 }
